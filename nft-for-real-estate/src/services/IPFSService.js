@@ -1,0 +1,72 @@
+import { S3 } from "aws-sdk";
+import axios from "axios";
+
+const s3 = new S3({
+  // DONT HOLD THESE ON FRONTEND!
+  accessKeyId: "A4CAC382F0830C96D559",
+  secretAccessKey: "WaRiMrdZ3oCWl0gSUZ2ZfdlWJJsxsCu0wlpDkq8F",
+  endpoint: "https://s3.filebase.com",
+  region: "us-east-1",
+  signatureVersion: "v4",
+});
+
+export async function uploadJSON(name, jsonData, onUploaded) {
+  const request = s3.putObject({
+    Bucket: "nft-first-project",
+    Key: name,
+    Body: JSON.stringify(jsonData),
+    ContentType: "application/json; charset=utf-8",
+  });
+
+  // Returns CID trough response headers
+  request.on("httpHeaders", (_, headers) => {
+    onUploaded(headers["x-amz-meta-cid"]);
+  });
+
+  request.on("error", (error) => {
+    console.error(error);
+  });
+
+  request.send();
+}
+
+async function uploadImage(file) {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: 'nft-first-project',
+      Key: file.name,
+      ContentType: file.type,
+      Body: file,
+      // Metadata: { import: "car" }
+    };
+
+    const request = s3.putObject(params);
+
+    request.on("httpHeaders", (_, headers) => {
+      resolve(headers["x-amz-meta-cid"]);
+    });
+
+    request.on("error", (error) => {
+      reject(error);
+    });
+
+    request.send();
+  });
+}
+
+export async function getFilesCids(files) {
+  const promises = files.map(file => uploadImage(file));
+  const cids = await Promise.all(promises);
+  return cids;
+}
+
+export async function getMetadata(url) {
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+
+    return {};
+  }
+}

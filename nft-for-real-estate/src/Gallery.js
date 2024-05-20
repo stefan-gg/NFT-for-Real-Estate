@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Flex, Heading, HStack, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, Heading, HStack, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, VStack } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
 import { formatEther } from "ethers";
 
@@ -113,14 +113,18 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view }) => {
                                     </Box>
                                 </HStack>
                                 <Box>{formatEther(nft[1])} ETH</Box>
-                                <Box>
+                                <HStack>
                                     <Button colorScheme="gray" mt={1} size="sm" onClick={ () => {
                                         setSelectedNFT(nft);
                                         onOpen();
                                     }}>
                                         See details
                                     </Button>
-                                </Box>
+                                    {nft[2].toLowerCase() ===
+                  window.ethereum.selectedAddress.toLowerCase() && <Button mt={1} size="sm" colorScheme="red">
+                                        Buy/Make an offer
+                                    </Button>}
+                                </HStack>
                             </Box>
                             </Box>
                         </Box>

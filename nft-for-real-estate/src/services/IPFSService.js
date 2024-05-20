@@ -2,9 +2,8 @@ import { S3 } from "aws-sdk";
 import axios from "axios";
 
 const s3 = new S3({
-  // DONT HOLD THESE ON FRONTEND!
-  accessKeyId: "A4CAC382F0830C96D559",
-  secretAccessKey: "WaRiMrdZ3oCWl0gSUZ2ZfdlWJJsxsCu0wlpDkq8F",
+  accessKeyId: "",
+  secretAccessKey: "",
   endpoint: "https://s3.filebase.com",
   region: "us-east-1",
   signatureVersion: "v4",

@@ -2,8 +2,8 @@ import { S3 } from "aws-sdk";
 import axios from "axios";
 
 const s3 = new S3({
-  accessKeyId: "",
-  secretAccessKey: "",
+  accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
   endpoint: "https://s3.filebase.com",
   region: "us-east-1",
   signatureVersion: "v4",
@@ -17,7 +17,6 @@ export async function uploadJSON(name, jsonData, onUploaded) {
     ContentType: "application/json; charset=utf-8",
   });
 
-  // Returns CID trough response headers
   request.on("httpHeaders", (_, headers) => {
     onUploaded(headers["x-amz-meta-cid"]);
   });
@@ -36,7 +35,6 @@ async function uploadImage(file) {
       Key: file.name,
       ContentType: file.type,
       Body: file,
-      // Metadata: { import: "car" }
     };
 
     const request = s3.putObject(params);

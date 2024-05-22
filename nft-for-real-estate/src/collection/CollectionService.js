@@ -30,11 +30,7 @@ export default class CollectionService {
     async getNFT(id) {
         return await this.contract.getTokenData(id);
     }
-
-    // async buyNFT(tokenId, price){
-    //     return await this.contract.buyNFT(tokenId, parseEther(price));
-    // }
-
+    
     async mint(signer, cid, price) {
         return await this.contract
                     .connect(signer)

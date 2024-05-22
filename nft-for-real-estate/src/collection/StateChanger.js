@@ -13,4 +13,8 @@ export default class StateChanger {
     async buyNFT(tokenId, amount){
         return await this.contract.buyNFT(tokenId, /*parseEther(price),*/ { value: parseEther(amount) });
     }
+
+    async withdrawNFT(tokenId) {
+        return await this.contract.withdrawNFT(tokenId);
+    }
 }

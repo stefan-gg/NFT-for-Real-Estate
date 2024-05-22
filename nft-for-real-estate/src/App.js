@@ -20,6 +20,8 @@ function App() {
   const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
   const [view, setView] = useState('All NFTs');
+  const [purchase, setPurchase] = useState(false);
+  const [withdraw, setWithdraw] = useState(false);
 
   const toast = useToast({
     position: 'top-right',
@@ -27,7 +29,7 @@ function App() {
     duration: 3000,
   });
 
-  const viewOptions = ['All NFTs', 'My NFTs', 'Offered NFTs', 'My Offers'];
+  const viewOptions = ['All Properties', 'My Property', 'Offers', 'My Offers'];
 
   useEffect(() => {
     const setupProvider = async () => {
@@ -108,8 +110,35 @@ function App() {
     setIsMinting(false);
   };
 
+  const withdrawNFT = async (tokenId) => {
+    setWithdraw(true);
+    if (user.signer && stateChanger){
+
+      toast({
+        title: 'Withdrawal process is in progress!',
+        status: 'info',
+      });
+
+      await stateChanger.withdrawNFT(tokenId).then(tx => {
+
+        provider.once(tx.hash, () => {
+          toast({
+            title: 'Withdrawal process is successful!',
+            status: 'success',
+          });
+        });
+      });
+      setWithdraw(false);
+    }
+  };
+
   const handleCreateNFT = async data => {
     setIsMinting(true);
+
+    toast({
+      title: 'Transaction for creating NFT is sent',
+      status: 'info',
+    });
 
     const arr = await getFilesCids(data.files);
 
@@ -126,11 +155,6 @@ function App() {
       if (collectionService) {
         const price = toBigInt(data.price);
 
-        toast({
-          title: 'Transaction for creating NFT is sent',
-          status: 'info',
-        });
-
         collectionService.mint(user.signer, cid, price).then(tx => {
 
           setIsMinting(false);
@@ -139,6 +163,7 @@ function App() {
             toast({
               title: 'Your NFT is created!',
               status: 'success',
+              description: 'You can now refresh the market too see your new Property NFT',
             });
           });
         });
@@ -147,21 +172,24 @@ function App() {
   };
 
   const handleBuyNft = async (tokenId, price) => {
-
-    toast({
-      title: 'Purchase is in progess.',
-      status: 'info',
-    });
+    setPurchase(true);
 
     if (user.signer && stateChanger) {
-      
-      stateChanger.buyNFT(tokenId, price).then(tx => {
+
+      toast({
+        title: 'Purchase is in progess.',
+        status: 'info',
+      });
+
+      await stateChanger.buyNFT(tokenId, price).then(tx => {
+
         provider.once(tx.hash, () => {
           toast({
             title: 'Purchase is successful!',
             status: 'success',
           });
         });
+        setPurchase(false);
       });
     } else {
       toast({
@@ -182,12 +210,17 @@ function App() {
         handleConnect={handleConnectWallet}
         handleCreateNFT={handleCreateNFT}
       />
-      <Gallery
-        list={list}
-        refreshGallery={refreshGallery}
-        view={view}
-        handleBuyNft={handleBuyNft}
-      />
+      {list.length > 0 && 
+        (<Gallery
+          list={list}
+          refreshGallery={refreshGallery}
+          view={view}
+          handleBuyNft={handleBuyNft}
+          purchase={purchase}
+          withdrawNFT={withdrawNFT}
+          withdraw={withdraw}
+        />)
+      }
     </>
   );
 }

@@ -91,9 +91,11 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                     for (let i = 0; i < e.target.files.length; i++){
                                         arrayWithFiles.push(e.target.files[i]);
                                     }
-
-                                    setImage(URL.createObjectURL(e.target.files[0]));
-
+                                    
+                                    if (!image){
+                                        setImage(URL.createObjectURL(e.target.files[0]));
+                                    }
+                                    
                                     setFormData({...formData, files: arrayWithFiles});
                                 }}
                             />

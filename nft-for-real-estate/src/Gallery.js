@@ -1,45 +1,34 @@
-import { Badge, Box, Button, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, VStack, Card, Stack, CardBody, CardFooter, Input } from "@chakra-ui/react";
+import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, VStack, Card, Stack, CardBody, CardFooter, Input } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
-import { formatEther, NamedFragment } from "ethers";
+import { formatEther } from "ethers";
 
-const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) => {
+const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft, purchase, withdrawNFT, withdraw }) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [ selectedNFT, setSelectedNFT ] = useState(null);
     const [list, setList] = useState([]);
-    const [formData, setFormData] = useState({
-      tokenId: "0",
-      price: "1",
-    });
     const hiddenInputRefTokenId = useRef("");
     const hiddenInputRefPrice = useRef("");
+    const hiddenInputRefWithdrawToken = useRef("");
 
     const handleSubmit = (event) => {
+
       const tokenId = hiddenInputRefTokenId.current.value;
       const price = hiddenInputRefPrice.current.value;
-
-      setFormData({...formData, tokenId : tokenId});
-      setFormData({...formData, price: price});
 
       event.preventDefault();
       handleBuyNft(tokenId, price);
     };
 
-    // const isFirstRender = useRef(true);
-
-    // useEffect(() => {
-    //     if (isFirstRender.current) {
-    //     isFirstRender.current = false;
-    //     return;
-    //     }
-    //     setList(unfilteredList);
-
-    // }, [unfilteredList]);
+    const handleWithdraw = (event) => {
+      event.preventDefault();
+      withdrawNFT(hiddenInputRefWithdrawToken.current.value);
+    }
 
     useEffect(() => {
-        if (view === "All NFTs") {
+        if (view === "All Properties") {
             setList(unfilteredList);
-          } else if (view === "My NFTs") {
+          } else if (view === "My Property") {
             setList(
               unfilteredList.filter(
                 (nft) =>
@@ -47,10 +36,10 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                   window.ethereum.selectedAddress.toLowerCase()
               )
             );
-          } else if (view === "Offered NFTs") {
-            setList(unfilteredList);
-          } else if (view === "My Offers") 
-            setList(unfilteredList);
+          }// else if (view === "Offered NFTs") {
+          //   setList(unfilteredList);
+          // } else if (view === "My Offers") 
+          //   setList(unfilteredList);
     }, [unfilteredList, view]);
 
     return (
@@ -61,7 +50,7 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
             {selectedNFT && (
               <>
                 <ModalHeader>
-                  <HStack spacing={3}>
+                  <HStack ml="40%" spacing={3}>
                     <Badge borderRadius="full" px="2">
                       #{selectedNFT[0].toString()}
                     </Badge>
@@ -95,6 +84,7 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                   </Box> */}
 
                   <Image
+                    ml="30%"
                     objectFit="cover"
                     maxW="600px"
                     src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
@@ -121,14 +111,20 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                           made with espresso and steamed milk.
                         </Text> */}
 
-                        <Box mt={1}>
-                          Price: {formatEther(selectedNFT[1])} ETH
+                        <Box mt={3}>
+                          <Text size="md">Price:</Text>{' '}
+                          {formatEther(selectedNFT[1])} ETH
                         </Box>
-                        <Box mt={1}>Owner: {selectedNFT[2]}</Box>
+                        <Box mt={3}>
+                          <Text size="md">Owner:</Text> {selectedNFT[2]}
+                        </Box>
                         {/* Carousel here  */}
-                        <Box>Description: {selectedNFT.description}</Box>
-                        <Box title="Click on the link">
-                          Location:{' '}
+                        <Box mt={3}>
+                          <Text size="md">Description:</Text>{' '}
+                          {selectedNFT.description}
+                        </Box>
+                        <Box mt={3} title="Click on the link">
+                          <Text size="md">Location: </Text>
                           <Link
                             onClick={() =>
                               window.open(selectedNFT.location, '_blank')
@@ -137,11 +133,13 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                             {selectedNFT.location}
                           </Link>
                         </Box>
-                        <Box py="2">
-                          Property area is: {selectedNFT.propertyArea} m^2
+                        <Box mt={3} py="2">
+                          <Text size="md">Property area is:</Text>{' '}
+                          {selectedNFT.propertyArea} m^2
                         </Box>
-                        <Box py="2">
-                          This property has {selectedNFT.numberOfRooms} rooms.
+                        <Box mt={3} py="2">
+                          <Text size="md">This property has: </Text>{' '}
+                          {selectedNFT.numberOfRooms} rooms.
                         </Box>
                       </CardBody>
 
@@ -169,22 +167,22 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
           }}
         >
           <Flex pr="5">
-            <Heading as="h1" size="xl" mr={1}>
-              Gallery
+            <Heading as="h1" size="xl" ml={6}>
+              Marketplace
             </Heading>
             <Spacer />
             <Button onClick={refreshGallery}>Refresh</Button>
           </Flex>
           <SimpleGrid columns={3} spacing={10} mt={7} ml={5}>
-            {list.map(nft => (
+            {unfilteredList.map(nft => (
               <Box key={nft[0].toString()}>
                 <Box
-                  maxW="sm"
+                  maxW="lg"
                   borderWidth="1px"
                   borderRadius="lg"
                   overflow="hidden"
                 >
-                  <Image src={nft.image} alt={nft.image} />
+                  {/* <Image src={nft.image} alt={nft.image} /> */}
                   <Box p="6">
                     <HStack spacing={3}>
                       <Badge borderRadius="full" px="2" colorScheme="teal">
@@ -201,7 +199,16 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                       </Box>
                     </HStack>
                     <Box>{formatEther(nft[1])} ETH</Box>
-                    <HStack>
+                    <Center>
+                      <img
+                        style={{
+                          height: '300px',
+                          width: '300px',
+                        }}
+                        src={'https://ipfs.filebase.io/ipfs/' + nft.files[0]}
+                      />
+                    </Center>
+                    <HStack mt={1}>
                       <Button
                         colorScheme="gray"
                         mt={1}
@@ -215,37 +222,55 @@ const Gallery = ({ list: unfilteredList, refreshGallery, view, handleBuyNft }) =
                       </Button>
                       {
                         nft[2].toLowerCase() !==
-                          window.ethereum.selectedAddress.toLowerCase() && (
-                          <form onSubmit={handleSubmit}>
-                            <Input
-                              type="hidden"
-                              ref={hiddenInputRefTokenId} 
-                              value={nft[0].toString()} 
-                            />
-                            <Input 
-                              type="hidden" 
-                              ref={hiddenInputRefPrice}
-                              value={formatEther(nft[1])} 
-                            />
-                            <Button
-                              mt={1}
-                              size="sm"
-                              type="submit"
-                              colorScheme="red"
-                            >
-                              Buy
-                            </Button>
-                          </form>
-                        )
+                          window.ethereum.selectedAddress.toLowerCase() &&
+                          nft[4] === true &&
+                          (
+                            <form onSubmit={handleSubmit}>
+                              <Input
+                                type="hidden"
+                                ref={hiddenInputRefTokenId}
+                                value={nft[0].toString()}
+                              />
+                              <Input
+                                type="hidden"
+                                ref={hiddenInputRefPrice}
+                                value={formatEther(nft[1])}
+                              />
+                              <Button
+                                isLoading={purchase}
+                                mt={1}
+                                size="sm"
+                                type="submit"
+                                colorScheme="red"
+                              >
+                                Buy
+                              </Button>
+                            </form>
+                          )
                         // &&
                         // <Button mt={1} size="sm" colorScheme="red">
                         //     Make an offer
                         // </Button>
                       }
                       {nft[2].toLowerCase() ===
-                        window.ethereum.selectedAddress.toLowerCase() && (
-                        <Button mt={1} size="sm" colorScheme="green">
-                          Withdraw NFT from the market
+                        window.ethereum.selectedAddress.toLowerCase() &&
+                        nft[4] === true && (
+                        <form onSubmit={handleWithdraw}>
+                          <Input
+                            type="hidden"
+                            ref={hiddenInputRefWithdrawToken}
+                            value={nft[0].toString()}
+                          />
+                          <Button isLoading={withdraw} type="submit" mt={1} ml="20%" size="sm" colorScheme="green">
+                            Withdraw property from the market
+                          </Button>
+                        </form>
+                      )}
+                      {nft[2].toLowerCase() ===
+                        window.ethereum.selectedAddress.toLowerCase() &&
+                        nft[4] === false && (
+                        <Button mt={1} ml="20%" size="sm" colorScheme="green">
+                          Return property to the market
                         </Button>
                       )}
                     </HStack>

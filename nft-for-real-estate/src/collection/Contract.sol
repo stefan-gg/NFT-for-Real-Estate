@@ -2,7 +2,6 @@ pragma solidity 0.8.19;
 
 contract RealEstateCollection {
     
-    uint256 public constant MAX_TOKENS = 5; //mozda da se ukloni ovo, ili da vazi samo za obicnog korisnika
     uint256 public constant MIN_TOKEN_PRICE = 1 gwei;
 
     uint256 public count;
@@ -26,6 +25,7 @@ contract RealEstateCollection {
     error CidNotValid();
     error MaxTokensBrought();
     error TokenPriceTooLow();
+    error OwnerNotValid();
 
     constructor() {}
 
@@ -49,7 +49,6 @@ contract RealEstateCollection {
         if(price < MIN_TOKEN_PRICE) revert TokenPriceTooLow();
         if(bytes(cid).length < 20) revert CidNotValid();
         if(msg.value < 0.01 ether) revert NotEnoughFundsSend();
-        if(_balanceOf[msg.sender] >= MAX_TOKENS) revert MaxTokensBrought();
 
         uint256 tokenId = count++;
 
@@ -60,19 +59,28 @@ contract RealEstateCollection {
     }
 
     function withdrawNFT(uint256 tokenId) public {
-        if (_ownerOf[tokenId] == msg.sender){
-            _nftsAvailableForSale[tokenId] = false;
-        }
+        if (_ownerOf[tokenId] != msg.sender) revert OwnerNotValid();
+        _nftsAvailableForSale[tokenId] = false;
+        
+    }
+
+    function relistNFT(uint256 tokenId) public {
+        if (_ownerOf[tokenId] != msg.sender) revert OwnerNotValid();
+        _nftsAvailableForSale[tokenId] = true;
+        
+    }
+
+    function changeTokenPrice(uint256 tokenId, uint256 price) public{
+        if (_ownerOf[tokenId] != msg.sender) revert OwnerNotValid();
+        _tokenPrice[tokenId] = price;
     }
 
     function buyNFT(uint256 tokenId) public payable {
         if (msg.value < _tokenPrice[tokenId]) revert NotEnoughFundsSend();
-        // if (balanceOf(msg.sender) >= MAX_TOKENS) revert MaxTokensBrought();
          
         _nftsAvailableForSale[tokenId] = false;
         payable(_ownerOf[tokenId]).transfer(_tokenPrice[tokenId]);
         _ownerOf[tokenId] = msg.sender;
-        // safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
     }
     
     function getAllTokensData() external view returns (TokenData[] memory){

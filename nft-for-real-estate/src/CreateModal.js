@@ -18,6 +18,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         onCreate(formData);
+        setImage(null);
         onClose();
     };
 
@@ -83,25 +84,48 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                 }}  
                             />
 
-                            <FormLabel>Select pictures (1st selected will be set as your NFT picture)</FormLabel>
-                            <Input type="file" accept="image/png, image/jpeg" multiple={true} 
+                            <FormLabel>Select picture for your property NFT</FormLabel>
+                            <Input type="file" accept="image/png, image/jpeg" multiple={false} 
                                 onChange={(e) => { 
-                                    let arrayWithFiles = [];
+                                    let arrayWithFiles = [e.target.files[0]];
                                     
-                                    for (let i = 0; i < e.target.files.length; i++){
-                                        arrayWithFiles.push(e.target.files[i]);
-                                    }
-                                    
-                                    if (!image){
-                                        setImage(URL.createObjectURL(e.target.files[0]));
-                                    }
+                                    setImage(URL.createObjectURL(arrayWithFiles[0]));
                                     
                                     setFormData({...formData, files: arrayWithFiles});
                                 }}
                             />
-
+                            
                             {image && <FormLabel>NFT image preview</FormLabel> }
                             {image && <img alt="preview image" width="300px" height="200px" src={image}/>}
+                            
+                            <FormLabel 
+                                title="These pictures will be presented in the 'See more detail' section">
+                                Select other pictures that you want to show related to the property
+                            </FormLabel>
+                            <Input type="file" accept="image/png, image/jpeg" multiple={true} 
+                                onChange={(e) => { 
+                                    let arrayWithFiles = formData.files;
+                                    console.log(e.target.files.length);
+                                    for (let i = 0; i < e.target.files.length; i++){
+                                        arrayWithFiles.push(e.target.files[i]);
+                                    }
+                                    
+                                    console.log(arrayWithFiles);
+
+                                    // if (arrayWithFiles.length > 0) {
+                                    //     setImage(URL.createObjectURL(arrayWithFiles[0]));
+                                    // }
+                                    
+                                    // if (!image){
+                                        // setImage(URL.createObjectURL(e.target.files[0]));
+                                    // }
+
+                                    setFormData({...formData, files: arrayWithFiles});
+                                }}
+                            />
+
+                            {/* {image && <FormLabel>NFT image preview</FormLabel> }
+                            {image && <img alt="preview image" width="300px" height="200px" src={image}/>} */}
 
                             <FormLabel>Price</FormLabel>
                             <Input 
@@ -119,7 +143,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                         e.target.value = inputValue;
 
                                         const price = parseEther(e.target.value).toString().replace("n", "");
-                                        console.log("aa", price);
 
                                         setFormData({...formData, price});
                                     } 

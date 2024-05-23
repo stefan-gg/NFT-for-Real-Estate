@@ -32,7 +32,7 @@ async function uploadImage(file) {
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: 'nft-first-project',
-      Key: file.name,
+      Key: Date.now().toString() + file.name,
       ContentType: file.type,
       Body: file,
     };

@@ -29,7 +29,7 @@ function App() {
     duration: 3000,
   });
 
-  const viewOptions = ['All Properties', 'My Property', 'Offers', 'My Offers'];
+  const viewOptions = ['All Properties', 'My Properties', 'Offers', 'My Offers'];
 
   useEffect(() => {
     const setupProvider = async () => {
@@ -132,11 +132,34 @@ function App() {
     }
   };
 
+  const relistNft = async (tokenId) => {
+    setWithdraw(true);
+
+    toast({
+      title: 'Relisting process is in progress!',
+      status: 'info',
+    });
+
+    if (user.signer && stateChanger){
+
+      await stateChanger.relistNFT(tokenId).then(tx => {
+
+        provider.once(tx.hash, () => {
+          toast({
+            title: 'Relisting process is successful!',
+            status: 'success',
+          });
+        });
+      });
+      setWithdraw(false);
+    }
+  };
+
   const handleCreateNFT = async data => {
     setIsMinting(true);
 
     toast({
-      title: 'Transaction for creating NFT is sent',
+      title: 'NFT creation process has started!',
       status: 'info',
     });
 
@@ -199,6 +222,27 @@ function App() {
     }
   };
 
+  const changePrice = async (tokenId, price) => {
+    if (user.signer && stateChanger){
+
+      toast({
+        title: 'Property price change is in progess.',
+        status: 'info',
+      });
+
+      await stateChanger.changeTokenPrice(tokenId, price).then(tx => {
+
+        provider.once(tx.hash, () => {
+          toast({
+            title: 'Property price is updated successfuly!',
+            status: 'success',
+          });
+        });
+      });
+
+    }
+  }
+
   return (
     <>
       <Header
@@ -219,6 +263,8 @@ function App() {
           purchase={purchase}
           withdrawNFT={withdrawNFT}
           withdraw={withdraw}
+          relistNft={relistNft}
+          changePrice={changePrice}
         />)
       }
     </>

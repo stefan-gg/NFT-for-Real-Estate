@@ -1,6 +1,7 @@
 import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { parseEther } from "ethers";
+import { AttachmentIcon, InfoIcon } from "@chakra-ui/icons";
 
 const CreateModal = ({ isOpen, onCreate, onClose }) => {
     const [image, setImage] = useState(null)
@@ -84,7 +85,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                 }}  
                             />
 
-                            <FormLabel>Select picture for your property NFT</FormLabel>
+                            <FormLabel>Select picture for your property NFT <AttachmentIcon ml={1} /></FormLabel>
                             <Input type="file" accept="image/png, image/jpeg" multiple={false} 
                                 onChange={(e) => { 
                                     let arrayWithFiles = [e.target.files[0]];
@@ -100,7 +101,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                             
                             <FormLabel 
                                 title="These pictures will be presented in the 'See more detail' section">
-                                Select other pictures that you want to show related to the property
+                                Select other pictures that you want to show related to the property <InfoIcon mr={1} />
                             </FormLabel>
                             <Input type="file" accept="image/png, image/jpeg" multiple={true} 
                                 onChange={(e) => { 

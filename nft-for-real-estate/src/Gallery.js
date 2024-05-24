@@ -1,6 +1,8 @@
 import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, VStack, Card, Stack, CardBody, CardFooter, Input, effect } from "@chakra-ui/react";
+import { AddIcon, EditIcon, ExternalLinkIcon, PlusSquareIcon, SmallAddIcon } from '@chakra-ui/icons'
 import { useEffect, useState, useRef } from "react";
 import { formatEther, parseEther } from "ethers";
+import Carousel from "./Carousel";
 
 const Gallery = ({
   list: unfilteredList,
@@ -63,6 +65,7 @@ const Gallery = ({
         <ModalContent>
           {selectedNFT && (
             <>
+              {console.log(selectedNFT)}
               <ModalHeader>
                 <HStack ml="40%" spacing={3}>
                   <Badge borderRadius="full" px="2">
@@ -81,25 +84,27 @@ const Gallery = ({
               </ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Image
-                  ml="30%"
-                  objectFit="cover"
-                  maxW="600px"
-                  src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-                  alt="Caffe Latte"
-                />
+                <Center marginTop="15%" marginRight="45%">
+                  <Carousel>
+                    {selectedNFT.files.map(imageSrc => (
+                      <Box width="450px" height="350px">
+                        <Image
+                          objectFit="cover"
+                          width="450px"
+                          height="350px"
+                          src={'https://ipfs.filebase.io/ipfs/' + imageSrc}
+                          alt="Caffe Latte"
+                        />
+                      </Box>
+                    ))}
+                  </Carousel>
+                </Center>
                 <Card
+                  mt={60}
                   direction={{ base: 'column', sm: 'row' }}
                   overflow="hidden"
                   variant="outline"
                 >
-                  {/* <Image
-                      objectFit="cover"
-                      maxW="600px"
-                      src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-                      alt="Caffe Latte"
-                    /> */}
-
                   <Stack>
                     <CardBody>
                       <Heading size="md">Information about property</Heading>
@@ -143,26 +148,25 @@ const Gallery = ({
                             size="sm"
                             colorScheme="green"
                           >
-                            Update price
+                           <EditIcon mr={1} /> Update price
                           </Button>
                         </form>
                       </Box>
                       <Box mt={3}>
                         <Text size="md">Owner:</Text> {selectedNFT[2]}
                       </Box>
-                      {/* Carousel here  */}
                       <Box mt={3}>
                         <Text size="md">Description:</Text>{' '}
                         {selectedNFT.description}
                       </Box>
                       <Box mt={3} title="Click on the link">
                         <Text size="md">Location: </Text>
-                        <Link
+                        <Link isExternal
                           onClick={() =>
                             window.open(selectedNFT.location, '_blank')
                           }
                         >
-                          {selectedNFT.location}
+                          {selectedNFT.location} <ExternalLinkIcon mx='2px' />
                         </Link>
                       </Box>
                       <Box mt={3} py="2">
@@ -277,7 +281,7 @@ const Gallery = ({
                             </Button>
                           </form>
                           <Button mt={1} size="sm" colorScheme="red">
-                            Make an offer
+                            <PlusSquareIcon mr={1} /> Make an offer
                           </Button>
                         </HStack>
                       )}
@@ -309,11 +313,11 @@ const Gallery = ({
                             isLoading={withdraw}
                             type="submit"
                             mt={1}
-                            ml="40%"
+                            ml="35%"
                             size="sm"
                             colorScheme="green"
                           >
-                            Relist property to the market
+                          <SmallAddIcon /> Relist property to the market
                           </Button>
                         </form>
                       )}

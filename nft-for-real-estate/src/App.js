@@ -254,7 +254,7 @@ function App() {
         handleConnect={handleConnectWallet}
         handleCreateNFT={handleCreateNFT}
       />
-      {list.length > 0 && 
+      {user.balance &&
         (<Gallery
           list={list}
           refreshGallery={refreshGallery}

@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Textarea, Toast } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { parseEther } from "ethers";
 import { AttachmentIcon, InfoIcon } from "@chakra-ui/icons";
@@ -106,7 +106,7 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                             />
                             
                             {image && <FormLabel>NFT image preview</FormLabel> }
-                            {image && <img alt="preview image" width="300px" height="200px" src={image}/>}
+                            {image && <img alt="preview of the NFT" width="300px" height="200px" src={image}/>}
                             
                             <FormLabel 
                                 title="These pictures will be presented in the 'See more detail' section">

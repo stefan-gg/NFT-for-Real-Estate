@@ -1,4 +1,4 @@
-import { Contract, parseEther } from "ethers";
+import { Contract } from "ethers";
 import abi from "./abi.json";
 import { getMetadata } from "../services/IPFSService";
 

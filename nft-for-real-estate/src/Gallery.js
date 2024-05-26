@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, VStack, Card, Stack, CardBody, CardFooter, Input, effect, FormLabel } from "@chakra-ui/react";
+import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, Card, Stack, CardBody, Input } from "@chakra-ui/react";
 import { EditIcon, ExternalLinkIcon, PlusSquareIcon, SmallAddIcon, InfoIcon } from '@chakra-ui/icons'
 import { useEffect, useState, useRef } from "react";
 import { formatEther, parseEther } from "ethers";
@@ -94,7 +94,7 @@ const Gallery = ({
     listAllTokenOffers(nft[0].toString()).then(_list => {
       setOfferList(_list);
 
-      if (_list.length == 0){
+      if (_list.length === 0){
         setNoOffersMessage(true);
       } else {
         setNoOffersMessage(false);
@@ -224,7 +224,7 @@ const Gallery = ({
                 >
                   <Stack>
                     <CardBody>
-                      {offerList.length == 0 ? (
+                      {offerList.length === 0 ? (
                         <Box>
                           <Heading size="md">
                             Information about property
@@ -449,6 +449,7 @@ const Gallery = ({
                   <Box>Price: {formatEther(nft[1])} ETH</Box>
                   <Center>
                     <img
+                      alt={"TokenID" + nft[0].toString()}
                       style={{
                         height: '300px',
                         width: '300px',

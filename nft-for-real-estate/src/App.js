@@ -57,25 +57,25 @@ function App() {
   //   }
   // };
 
-  const handleConnectWallet = async () => {
-    setIsMinting(true);
-    setIsConnecting(true);
+  // const handleConnectWallet = async () => {
+  //   setIsMinting(true);
+  //   setIsConnecting(true);
 
-    try {
-      const accounts = await provider.send('eth_requestAccounts', []);
-      toast({ title: 'Wallet connected', status: 'success' });
-      updateAccounts(accounts);
-    } catch (error) {
-      toast({
-        title: 'Wallet connection failed',
-        status: 'error',
-        description: error.code,
-      });
-    }
+  //   try {
+  //     const accounts = await provider.send('eth_requestAccounts', []);
+  //     toast({ title: 'Wallet connected', status: 'success' });
+  //     updateAccounts(accounts);
+  //   } catch (error) {
+  //     toast({
+  //       title: 'Wallet connection failed',
+  //       status: 'error',
+  //       description: error.code,
+  //     });
+  //   }
 
-    setIsConnecting(false);
-    setIsMinting(false);
-  };
+  //   setIsConnecting(false);
+  //   setIsMinting(false);
+  // };
 
   const withdrawNFT = async (tokenId) => {
     setWithdraw(true);
@@ -544,6 +544,26 @@ function App() {
             setUser({ signer: null, balance: 0 });
           }
         }
+      };
+
+      const handleConnectWallet = async () => {
+        setIsMinting(true);
+        setIsConnecting(true);
+    
+        try {
+          const accounts = await provider.send('eth_requestAccounts', []);
+          toast({ title: 'Wallet connected', status: 'success' });
+          updateAccounts(accounts);
+        } catch (error) {
+          toast({
+            title: 'Wallet connection failed',
+            status: 'error',
+            description: error.code,
+          });
+        }
+    
+        setIsConnecting(false);
+        setIsMinting(false);
       };
 
       const _collectionService = new CollectionService(provider);

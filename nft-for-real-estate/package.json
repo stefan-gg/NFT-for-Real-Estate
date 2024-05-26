@@ -27,6 +27,9 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "warn"
+    },
     "extends": "react-app"
   },
   "browserslist": {

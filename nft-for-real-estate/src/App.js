@@ -477,7 +477,7 @@ function App() {
       try {
         const notificationList = await stateChanger.getNotificationsForUser();
 
-        if (notificationList.length == 0){
+        if (notificationList.length === 0){
           toast({
             title: "You don't have any new notifications.",
             status: 'info',

@@ -19,7 +19,7 @@ const Gallery = ({
   acceptOffer,
   removeOffer,
   removeAllOffers,
-  listNotifications
+  listNotifications,
 }) => {
   const { isOpen: moreDetailsIsOpen, onOpen: moreDetailsOnOpen, onClose: moreDetailsClose } = useDisclosure();
   const { isOpen: offerIsOpen, onOpen: offerOnOpen, onClose: offerOnClose } = useDisclosure();
@@ -93,6 +93,7 @@ const Gallery = ({
   const loadOffers = (e, nft) => {
     listAllTokenOffers(nft[0].toString()).then(_list => {
       setOfferList(_list);
+      
       if (_list.length == 0){
         setNoOffersMessage(true);
       } else {
@@ -174,6 +175,7 @@ const Gallery = ({
           )}
         </ModalContent>
       </Modal>
+
       {/* More details modal */}
       <Modal isOpen={moreDetailsIsOpen} onClose={closeMoreDetails} size="full">
         <ModalOverlay />

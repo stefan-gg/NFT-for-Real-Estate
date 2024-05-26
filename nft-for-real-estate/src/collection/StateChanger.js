@@ -4,7 +4,7 @@ import abi from "./abi.json";
 export default class StateChanger {
     constructor(signer) {
         this.contract = new Contract(
-            "0x50a8bb2F2943d33aEF8c4e119D2CdF77B981EfF9",
+            "0xce24dd3aEEac86cB395e6FeC375Ad559f06f0947",
             abi, 
             signer);
     }
@@ -43,5 +43,9 @@ export default class StateChanger {
 
     async getNotificationsForUser() {
         return await this.contract.getNotificationsForUser();
+    }
+
+    async deleteNotificationsForUser() {
+        return await this.contract.deleteNotificationsForUser();
     }
 }

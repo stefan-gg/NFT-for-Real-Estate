@@ -120,7 +120,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                         arrayWithFiles = [formData.files[0]];
                                     }
 
-                                    console.log(e.target.files.length);
                                     for (let i = 0; i < e.target.files.length; i++){
                                         if (e.target.files[0].size > 1024*1024) {
                                             alert("Maximum picture size must be 1MB! Please select different picture.")
@@ -128,8 +127,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                             arrayWithFiles.push(e.target.files[i]);    
                                         }
                                     }
-
-                                    console.log(arrayWithFiles);
 
                                     setFormData({...formData, files: arrayWithFiles});
                                 }}

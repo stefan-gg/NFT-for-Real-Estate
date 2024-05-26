@@ -19,18 +19,17 @@ function App() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [list, setList] = useState([]);
-  const [offerList, setOfferList] = useState([]);
   const [view, setView] = useState('All NFTs');
   const [purchase, setPurchase] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
 
   const toast = useToast({
-    position: 'top-right',
+    position: 'top',
     isClosable: true,
     duration: 3000,
   });
 
-  const viewOptions = ['All Properties', 'My Properties', 'My Offers'];
+  const viewOptions = ['All Properties', 'My Properties'];
 
   useEffect(() => {
     const setupProvider = async () => {
@@ -67,8 +66,9 @@ function App() {
   }, [provider]);
 
   const refreshGallery = async () => {
-    if (collectionService)
+    if (collectionService){
       await collectionService.getAllNFTs().then(_list => setList(_list));
+    }
   };
 
   const loadAccounts = async () => {
@@ -335,7 +335,7 @@ function App() {
   const addOffer = async (tokenId, price) => {
     if (user.signer && stateChanger){
       toast({
-        position: 'top',
+        // position: 'top',
         title: 'If you want to add offer you need to confirm transaction on Metamask.',
         status: 'info',
         duration: "10000"
@@ -379,6 +379,7 @@ function App() {
     toast({
       title: 'If you want to continue please accept Metamask transaction!',
       status: 'info',
+      duration: '7000',
     });
 
     if (user.signer && stateChanger) {
@@ -414,6 +415,7 @@ function App() {
     toast({
       title: 'If you want to continue please accept Metamask transaction!',
       status: 'info',
+      duration: '7000',
     });
 
     if (user.signer && stateChanger){
@@ -449,6 +451,7 @@ function App() {
     toast({
       title: 'If you want to continue please accept Metamask transaction!',
       status: 'info',
+      duration: '7000',
     });
 
     if (user.signer && stateChanger){
@@ -482,8 +485,10 @@ function App() {
 
   const listNotifications = async () => {
     toast({
-      title: 'If you want to continue please accept Metamask transaction!',
+      title:
+        'If you want to continue please accept Metamask transaction! If you do not have any new notifications you can reject the transaction.',
       status: 'info',
+      duration: '7000',
     });
 
     if (user.signer && stateChanger){
@@ -501,18 +506,28 @@ function App() {
         for(let i = 0; i < notificationList.length; i++){
           if (notificationList[i][1] === false){
             toast({
-              title: 'Rejected offer for token : ' + notificationList[i][0],
+              title: 'Rejected offer for token with ID : ' + notificationList[i][0],
               status: 'error',
               duration: "10000"
             });
           } else {
             toast({
-              title: 'Accepted offer for token : ' + notificationList[i][0],
+              title: 'Accepted offer for token with ID : ' + notificationList[i][0],
               status: 'success',
               duration: "10000"
             });
           }
         }
+
+        await stateChanger.deleteNotificationsForUser().then(tx => {
+          provider.once(tx.hash, () => {
+            toast({
+              title: 'There are no more notifications! ',
+              status: 'success',
+              description: 'Please refresh the page'
+            });
+          });
+        });
 
       } catch (error) {
         if (error.code === 4001) {

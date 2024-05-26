@@ -14,18 +14,38 @@ contract RealEstateCollection {
         bool forSale;
     }
 
+    // struct OfferData {
+    //     uint256 offeredPrice;
+    //     address offerrer;
+    // }
+
+    struct Offer {
+        address buyerAddress;
+        uint256 amount;
+        bool isOfferStillValid;
+    }
+
+    // struct OfferDict {
+    //     mapping(address => mapping(uint256 => uint256)) offerDict;
+    //     uint256 counter;
+    // }
+
     mapping (uint256 => uint256) private _tokenPrice;
     mapping (uint256 => bool) private _nftsAvailableForSale;
     mapping (address => uint256) private _balanceOf;
     mapping (uint256 => address) private _ownerOf;
     mapping (uint256 => string) private _tokenURI;
-    
 
+    mapping(uint256 => Offer[]) private _offers;
+    
+    mapping (address => mapping(uint256 => uint256)) private _lockedFunds;
+    
     error NotEnoughFundsSend();
     error CidNotValid();
     error MaxTokensBrought();
     error TokenPriceTooLow();
     error OwnerNotValid();
+    error SenderNotValid();
 
     constructor() {}
 
@@ -58,9 +78,97 @@ contract RealEstateCollection {
         _nftsAvailableForSale[tokenId] = true;
     }
 
+    function addOffer(uint256 tokenId) external payable {
+        if (_ownerOf[tokenId] == msg.sender) revert SenderNotValid();
+
+        Offer memory offer;
+        offer.amount = msg.value;
+        offer.buyerAddress = msg.sender;
+        offer.isOfferStillValid = true;
+
+        _offers[tokenId].push(offer);
+        
+        _lockedFunds[msg.sender][tokenId] = msg.value;
+    }
+
+    function acceptOffer(uint256 tokenId, address buyer) external {
+        if (msg.sender != _ownerOf[tokenId]) revert SenderNotValid();
+
+        Offer[] memory offers = _offers[tokenId];
+        
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].buyerAddress == buyer) {
+         
+                payable(_ownerOf[tokenId]).transfer(offers[i].amount);
+                _ownerOf[tokenId] = buyer;
+                _nftsAvailableForSale[tokenId] = false;
+         
+            } else if (offers[i].isOfferStillValid == true) {
+                payable(offers[i].buyerAddress).transfer(offers[i].amount);
+            }
+        }
+
+        delete _offers[tokenId];
+    }
+
+    function removeOffer(uint tokenId) external {
+
+        Offer[] memory offers = _offers[tokenId];
+        
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].buyerAddress == msg.sender) {
+
+                payable(offers[i].buyerAddress).transfer(offers[i].amount);
+                _offers[tokenId][i].isOfferStillValid = false;
+
+            }
+        }
+    }
+
+    function removeOfferAsTokenOwner(uint tokenId, address buyer) external {
+        if (msg.sender != _ownerOf[tokenId]) revert OwnerNotValid();
+
+        Offer[] memory offers = _offers[tokenId];
+        
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].buyerAddress == buyer) {
+
+                payable(offers[i].buyerAddress).transfer(offers[i].amount);
+                _offers[tokenId][i].isOfferStillValid = false;
+
+            }
+        }
+
+        delete _offers[tokenId];
+    }
+
+    function removeAllOffers(uint tokenId) external {
+        if (msg.sender != _ownerOf[tokenId]) revert OwnerNotValid();
+
+        Offer[] memory offers = _offers[tokenId];
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].isOfferStillValid == true) payable(offers[i].buyerAddress).transfer(offers[i].amount);
+        }
+
+        delete _offers[tokenId];
+    }
+
+    function listAllOffersForNFT(uint tokenId) external view returns (Offer[] memory) {
+        Offer[] memory offers = _offers[tokenId];
+        
+        return offers;
+    }
+
     function withdrawNFT(uint256 tokenId) public {
         if (_ownerOf[tokenId] != msg.sender) revert OwnerNotValid();
         _nftsAvailableForSale[tokenId] = false;
+
+        Offer[] memory offers = _offers[tokenId];
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].isOfferStillValid == true) payable(offers[i].buyerAddress).transfer(offers[i].amount);
+        }
+
+        delete _offers[tokenId];
         
     }
 
@@ -70,7 +178,7 @@ contract RealEstateCollection {
         
     }
 
-    function changeTokenPrice(uint256 tokenId, uint256 price) public{
+    function changeTokenPrice(uint256 tokenId, uint256 price) public {
         if (_ownerOf[tokenId] != msg.sender) revert OwnerNotValid();
         _tokenPrice[tokenId] = price;
     }
@@ -113,7 +221,4 @@ contract RealEstateCollection {
         return TokenData({ tokenId: tokenId, price: price, owner: owner, uri: uri, forSale: forSale });
     }
 
-    function transferEther(address recipient, uint amount) external payable {
-        payable(recipient).transfer(amount);
-    }
 }

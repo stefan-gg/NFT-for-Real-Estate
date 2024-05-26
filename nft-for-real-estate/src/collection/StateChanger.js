@@ -4,14 +4,13 @@ import abi from "./abi.json";
 export default class StateChanger {
     constructor(signer) {
         this.contract = new Contract(
-            "0xEb0218539596264235c64B1444EA5CE7916f7C7C",
-            // "0x8035a5806f15b3780c4BA3b5C839065D69D2752e",
+            "0x50a8bb2F2943d33aEF8c4e119D2CdF77B981EfF9",
             abi, 
             signer);
     }
 
     async buyNFT(tokenId, amount){
-        return await this.contract.buyNFT(tokenId, /*parseEther(price),*/ { value: parseEther(amount) });
+        return await this.contract.buyNFT(tokenId, { value: parseEther(amount) });
     }
 
     async withdrawNFT(tokenId) {
@@ -24,5 +23,25 @@ export default class StateChanger {
 
     async changeTokenPrice(tokenId, price) {
         return await this.contract.changeTokenPrice(tokenId, price);
+    }
+
+    async addTokenOffer(tokenId, price) {
+        return await this.contract.addOffer(tokenId, { value: price });
+    }
+
+    async removeOffer(tokenId, buyer) {
+        return await this.contract.removeOfferAsTokenOwner(tokenId, buyer);
+    }
+
+    async acceptOffer(tokenId, buyer) {
+        return await this.contract.acceptOffer(tokenId, buyer);
+    }
+
+    async removeAllOffers(tokenId) {
+        return await this.contract.removeAllOffers(tokenId);
+    }
+
+    async getNotificationsForUser() {
+        return await this.contract.getNotificationsForUser();
     }
 }

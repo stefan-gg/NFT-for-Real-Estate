@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Textarea } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Textarea, Toast } from "@chakra-ui/react";
 import { useState } from "react";
 import { parseEther } from "ethers";
 import { AttachmentIcon, InfoIcon } from "@chakra-ui/icons";
@@ -23,8 +23,13 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
         onClose();
     };
 
+    const onCustomClose = () => {
+        onClose();
+        setImage(null);
+    }
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onCustomClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Create new Nft</ModalHeader>
@@ -89,10 +94,14 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                             <Input type="file" accept="image/png, image/jpeg" multiple={false} 
                                 onChange={(e) => { 
                                     let arrayWithFiles = [e.target.files[0]];
+
+                                    if (e.target.files[0].size > 1024*1024) {
+                                        alert("Maximum picture size must be 1MB! Please select different picture.")
+                                    } else {
+                                        setImage(URL.createObjectURL(arrayWithFiles[0]));
                                     
-                                    setImage(URL.createObjectURL(arrayWithFiles[0]));
-                                    
-                                    setFormData({...formData, files: arrayWithFiles});
+                                        setFormData({...formData, files: arrayWithFiles});
+                                    }
                                 }}
                             />
                             
@@ -106,20 +115,21 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                             <Input type="file" accept="image/png, image/jpeg" multiple={true} 
                                 onChange={(e) => { 
                                     let arrayWithFiles = formData.files;
+
+                                    if (formData.files.length > 1){
+                                        arrayWithFiles = [formData.files[0]];
+                                    }
+
                                     console.log(e.target.files.length);
                                     for (let i = 0; i < e.target.files.length; i++){
-                                        arrayWithFiles.push(e.target.files[i]);
+                                        if (e.target.files[0].size > 1024*1024) {
+                                            alert("Maximum picture size must be 1MB! Please select different picture.")
+                                        } else {
+                                            arrayWithFiles.push(e.target.files[i]);    
+                                        }
                                     }
-                                    
-                                    console.log(arrayWithFiles);
 
-                                    // if (arrayWithFiles.length > 0) {
-                                    //     setImage(URL.createObjectURL(arrayWithFiles[0]));
-                                    // }
-                                    
-                                    // if (!image){
-                                        // setImage(URL.createObjectURL(e.target.files[0]));
-                                    // }
+                                    console.log(arrayWithFiles);
 
                                     setFormData({...formData, files: arrayWithFiles});
                                 }}

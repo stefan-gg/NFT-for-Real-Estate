@@ -5,6 +5,37 @@
 				"internalType": "uint256",
 				"name": "tokenId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "acceptOffer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "addOffer",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
 			}
 		],
 		"name": "buyNFT",
@@ -31,21 +62,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "CidNotValid",
-		"type": "error"
-	},
-	{
-		"inputs": [],
-		"name": "MaxTokensBrought",
-		"type": "error"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -62,6 +78,51 @@
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "CidNotValid",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "getNotificationsForUser",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isOfferAccepted",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct RealEstateCollection.OfferNotifications[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "InvalidOffer",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NFTIsNotForSale",
+		"type": "error"
 	},
 	{
 		"inputs": [],
@@ -87,27 +148,45 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "TokenPriceTooLow",
-		"type": "error"
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "removeAllOffers",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "recipient",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
 			}
 		],
-		"name": "transferEther",
+		"name": "removeOfferAsTokenOwner",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "SenderNotValid",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "TokenPriceTooLow",
+		"type": "error"
 	},
 	{
 		"inputs": [
@@ -216,6 +295,42 @@
 				"internalType": "struct RealEstateCollection.TokenData",
 				"name": "",
 				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "listAllOffersForNFT",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "buyerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isOfferStillValid",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct RealEstateCollection.Offer[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",

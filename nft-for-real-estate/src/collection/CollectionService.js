@@ -5,8 +5,7 @@ import { getMetadata } from "../services/IPFSService";
 export default class CollectionService {
     constructor(provider) {
         this.contract = new Contract(
-            "0xEb0218539596264235c64B1444EA5CE7916f7C7C",
-            // "0x8035a5806f15b3780c4BA3b5C839065D69D2752e",
+            "0x50a8bb2F2943d33aEF8c4e119D2CdF77B981EfF9",
             abi, 
             provider);
     }
@@ -35,5 +34,9 @@ export default class CollectionService {
         return await this.contract
                     .connect(signer)
                     .mint(cid, price, { value: 1n * 10n ** 16n});
+    }
+
+    async listAllOffersForNFT(tokenId) {
+        return await this.contract.listAllOffersForNFT(tokenId);
     }
 }

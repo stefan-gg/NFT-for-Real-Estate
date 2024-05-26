@@ -132,9 +132,6 @@ const CreateModal = ({ isOpen, onCreate, onClose }) => {
                                 }}
                             />
 
-                            {/* {image && <FormLabel>NFT image preview</FormLabel> }
-                            {image && <img alt="preview image" width="300px" height="200px" src={image}/>} */}
-
                             <FormLabel>Price</FormLabel>
                             <Input 
                                 step="any"

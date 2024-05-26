@@ -93,7 +93,7 @@ const Gallery = ({
   const loadOffers = (e, nft) => {
     listAllTokenOffers(nft[0].toString()).then(_list => {
       setOfferList(_list);
-      
+
       if (_list.length == 0){
         setNoOffersMessage(true);
       } else {
@@ -336,7 +336,6 @@ const Gallery = ({
                                         Offer :{' '}
                                         {formatEther(offer[1]).toString()}
                                       </Box>
-                                      <Box>{offer[2].toString()}</Box>
                                     </Box>
                                     <form
                                       onSubmit={e =>

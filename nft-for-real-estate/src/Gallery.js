@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, Card, Stack, CardBody, Input } from "@chakra-ui/react";
+import { Badge, Box, Button, Center, Flex, Heading, HStack, Image, Text, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Spacer, useDisclosure, Card, Stack, CardBody, Input, FormLabel } from "@chakra-ui/react";
 import { EditIcon, ExternalLinkIcon, PlusSquareIcon, SmallAddIcon, InfoIcon } from '@chakra-ui/icons'
 import { useEffect, useState, useRef } from "react";
 import { formatEther, parseEther } from "ethers";

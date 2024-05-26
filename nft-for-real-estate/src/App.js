@@ -62,6 +62,26 @@ function App() {
   //   }
   // }, [provider]);
 
+  const handleConnectWallet = async () => {
+    setIsMinting(true);
+    setIsConnecting(true);
+
+    try {
+      const accounts = await provider.send('eth_requestAccounts', []);
+      toast({ title: 'Wallet connected', status: 'success' });
+      updateAccounts(accounts);
+    } catch (error) {
+      toast({
+        title: 'Wallet connection failed',
+        status: 'error',
+        description: error.code,
+      });
+    }
+
+    setIsConnecting(false);
+    setIsMinting(false);
+  };
+
   const withdrawNFT = async (tokenId) => {
     setWithdraw(true);
     if (user.signer && stateChanger){

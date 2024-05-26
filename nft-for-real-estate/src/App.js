@@ -49,6 +49,17 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const setupProvider = async () => {
+      if (window.ethereum) {
+        const provider = new BrowserProvider(window.ethereum);
+        setProvider(provider);
+      }
+    };
+
+    setupProvider();
+  }, []);
+
   // const loadAccounts = async () => {
   //   const accounts = await provider.send('eth_accounts', []);
   //   updateAccounts(accounts);

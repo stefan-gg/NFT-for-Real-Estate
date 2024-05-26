@@ -535,7 +535,7 @@ function App() {
     } else {
       setUser({ signer: null, balance: 0 });
     }
-  }, [provider]);
+  }, [provider, handleUpdateAccounts]);
   
   const loadAccounts = useCallback(async () => {
     try {

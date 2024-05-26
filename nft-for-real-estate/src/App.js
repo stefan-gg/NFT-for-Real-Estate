@@ -1,5 +1,5 @@
 import { BrowserProvider, toBigInt } from 'ethers';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 import Header from './Header';
@@ -34,6 +34,18 @@ function App() {
   const refreshGallery = async () => {
     if (collectionService){
       await collectionService.getAllNFTs().then(_list => setList(_list));
+    }
+  };
+
+  const handleUpdateAccounts = async (accounts) => {
+    try {
+      const signer = await provider.getSigner();
+      const balance = await provider.getBalance(accounts[0]);
+      setUser({ signer, balance });
+      setStateChanger(new StateChanger(signer));
+    } catch (error) {
+      setUser({ signer: null, balance: 0 });
+      console.error('Error updating accounts:', error);
     }
   };
 
@@ -504,17 +516,6 @@ function App() {
   }, [provider, updateAccounts]);
   
   useEffect(() => {
-    const handleUpdateAccounts = async (accounts) => {
-      try {
-        const signer = await provider.getSigner();
-        const balance = await provider.getBalance(accounts[0]);
-        setUser({ signer, balance });
-        setStateChanger(new StateChanger(signer));
-      } catch (error) {
-        setUser({ signer: null, balance: 0 });
-        console.error('Error updating accounts:', error);
-      }
-    };
   
     if (provider) {
       loadAccounts();

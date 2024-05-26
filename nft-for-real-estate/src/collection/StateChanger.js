@@ -4,7 +4,7 @@ import abi from "./abi.json";
 export default class StateChanger {
     constructor(signer) {
         this.contract = new Contract(
-            "0xce24dd3aEEac86cB395e6FeC375Ad559f06f0947",
+            "0x14D7F9aBE8af7bc30A4e4b3972aD4e5e6Eb11DfD",
             abi, 
             signer);
     }

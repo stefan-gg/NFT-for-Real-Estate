@@ -37,7 +37,7 @@ function App() {
     }
   };
 
-  const handleUpdateAccounts = async (accounts) => {
+  const handleUpdateAccounts = useCallback(async (accounts) => {
     try {
       const signer = await provider.getSigner();
       const balance = await provider.getBalance(accounts[0]);
@@ -47,7 +47,7 @@ function App() {
       setUser({ signer: null, balance: 0 });
       console.error('Error updating accounts:', error);
     }
-  };
+  }, [provider]);
 
   useEffect(() => {
     const setupProvider = async () => {

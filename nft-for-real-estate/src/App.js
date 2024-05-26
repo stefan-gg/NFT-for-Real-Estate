@@ -37,18 +37,18 @@ function App() {
     }
   };
 
-  const loadAccounts = async () => {
-    const accounts = await provider.send('eth_accounts', []);
-    updateAccounts(accounts);
-  };
+  // const loadAccounts = async () => {
+  //   const accounts = await provider.send('eth_accounts', []);
+  //   updateAccounts(accounts);
+  // };
 
-  const updateAccounts = useCallback((accounts) => {
-    if (provider) {
-      handleUpdateAccounts(accounts);
-    } else {
-      setUser({ signer: null, balance: 0 });
-    }
-  }, [provider]);
+  // const updateAccounts = useCallback((accounts) => {
+  //   if (provider) {
+  //     handleUpdateAccounts(accounts);
+  //   } else {
+  //     setUser({ signer: null, balance: 0 });
+  //   }
+  // }, [provider]);
 
   const withdrawNFT = async (tokenId) => {
     setWithdraw(true);
@@ -486,39 +486,56 @@ function App() {
     }
   }
 
+  const updateAccounts = useCallback((accounts) => {
+    if (provider) {
+      handleUpdateAccounts(accounts);
+    } else {
+      setUser({ signer: null, balance: 0 });
+    }
+  }, [provider]);
+  
+  const loadAccounts = useCallback(async () => {
+    try {
+      const accounts = await provider.send('eth_accounts', []);
+      updateAccounts(accounts);
+    } catch (error) {
+      console.error('Error loading accounts:', error);
+    }
+  }, [provider, updateAccounts]);
+  
   useEffect(() => {
-    const setupProvider = async () => {
-      if (window.ethereum) {
-        const provider = new BrowserProvider(window.ethereum);
-        setProvider(provider);
+    const handleUpdateAccounts = async (accounts) => {
+      try {
+        const signer = await provider.getSigner();
+        const balance = await provider.getBalance(accounts[0]);
+        setUser({ signer, balance });
+        setStateChanger(new StateChanger(signer));
+      } catch (error) {
+        setUser({ signer: null, balance: 0 });
+        console.error('Error updating accounts:', error);
       }
     };
-
-    setupProvider();
-  }, []);
-
-  useEffect(() => {
+  
     if (provider) {
       loadAccounts();
-
+  
       const _collectionService = new CollectionService(provider);
       _collectionService.getAllNFTs().then(_list => setList(_list));
-
       setCollectionService(_collectionService);
-
+  
       window.ethereum.on('accountsChanged', accounts => {
         updateAccounts(accounts);
       });
-
+  
       window.ethereum.on('chainChanged', () => {
         window.location.reload();
       });
-
+  
       return () => {
         window.ethereum?.removeAllListeners();
       };
     }
-  }, [provider]);
+  }, [provider, loadAccounts, updateAccounts]);
 
   return (
     <>

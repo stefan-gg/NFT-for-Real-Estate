@@ -37,25 +37,25 @@ function App() {
     }
   };
 
-  const loadAccounts = async () => {
-    const accounts = await provider.send('eth_accounts', []);
-    updateAccounts(accounts);
-  };
+  // const loadAccounts = async () => {
+  //   const accounts = await provider.send('eth_accounts', []);
+  //   updateAccounts(accounts);
+  // };
 
-  const updateAccounts = async accounts => {
-    if (provider) {
-      if (accounts && accounts.length > 0) {
-        setUser({
-          signer: await provider.getSigner(),
-          balance: await provider.getBalance(accounts[0]),
-        });
+  // const updateAccounts = async accounts => {
+  //   if (provider) {
+  //     if (accounts && accounts.length > 0) {
+  //       setUser({
+  //         signer: await provider.getSigner(),
+  //         balance: await provider.getBalance(accounts[0]),
+  //       });
 
-        setStateChanger(new StateChanger(await provider.getSigner()));
-      } else {
-        setUser({ signer: null, balance: 0 });
-      }
-    }
-  };
+  //       setStateChanger(new StateChanger(await provider.getSigner()));
+  //     } else {
+  //       setUser({ signer: null, balance: 0 });
+  //     }
+  //   }
+  // };
 
   const handleConnectWallet = async () => {
     setIsMinting(true);
@@ -526,7 +526,25 @@ function App() {
 
   useEffect(() => {
     if (provider) {
-      loadAccounts();
+      const loadAccounts = async () => {
+        const accounts = await provider.send('eth_accounts', []);
+        updateAccounts(accounts);
+      };
+
+      const updateAccounts = async accounts => {
+        if (provider) {
+          if (accounts && accounts.length > 0) {
+            setUser({
+              signer: await provider.getSigner(),
+              balance: await provider.getBalance(accounts[0]),
+            });
+    
+            setStateChanger(new StateChanger(await provider.getSigner()));
+          } else {
+            setUser({ signer: null, balance: 0 });
+          }
+        }
+      };
 
       const _collectionService = new CollectionService(provider);
       _collectionService.getAllNFTs().then(_list => setList(_list));
@@ -545,7 +563,7 @@ function App() {
         window.ethereum?.removeAllListeners();
       };
     }
-  }, [provider, loadAccounts, updateAccounts]);
+  }, [provider]);
 
   return (
     <>

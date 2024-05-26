@@ -31,40 +31,6 @@ function App() {
 
   const viewOptions = ['All Properties', 'My Properties'];
 
-  useEffect(() => {
-    const setupProvider = async () => {
-      if (window.ethereum) {
-        const provider = new BrowserProvider(window.ethereum);
-        setProvider(provider);
-      }
-    };
-
-    setupProvider();
-  }, []);
-
-  useEffect(() => {
-    if (provider) {
-      loadAccounts();
-
-      const _collectionService = new CollectionService(provider);
-      _collectionService.getAllNFTs().then(_list => setList(_list));
-
-      setCollectionService(_collectionService);
-
-      window.ethereum.on('accountsChanged', accounts => {
-        updateAccounts(accounts);
-      });
-
-      window.ethereum.on('chainChanged', () => {
-        window.location.reload();
-      });
-
-      return () => {
-        window.ethereum?.removeAllListeners();
-      };
-    }
-  }, [provider]);
-
   const refreshGallery = async () => {
     if (collectionService){
       await collectionService.getAllNFTs().then(_list => setList(_list));
@@ -374,6 +340,40 @@ function App() {
       return await collectionService.listAllOffersForNFT(tokenId);
     }
   }
+
+  useEffect(() => {
+    const setupProvider = async () => {
+      if (window.ethereum) {
+        const provider = new BrowserProvider(window.ethereum);
+        setProvider(provider);
+      }
+    };
+
+    setupProvider();
+  }, []);
+
+  useEffect(() => {
+    if (provider) {
+      loadAccounts();
+
+      const _collectionService = new CollectionService(provider);
+      _collectionService.getAllNFTs().then(_list => setList(_list));
+
+      setCollectionService(_collectionService);
+
+      window.ethereum.on('accountsChanged', accounts => {
+        updateAccounts(accounts);
+      });
+
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+
+      return () => {
+        window.ethereum?.removeAllListeners();
+      };
+    }
+  }, [provider]);
 
   const acceptOffer = async (tokenId, buyerAddress) => {
     toast({

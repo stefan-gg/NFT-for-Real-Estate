@@ -7,6 +7,6 @@ The only requirement for this project are secret keys for Filebase. You can obta
 
 
 If you want to run the project locally you can clone the project and run these commands:
-  cd nft-for-real-estate
-  npm install
-  npm start
+  -cd nft-for-real-estate
+  -npm install
+  -npm start

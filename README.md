@@ -12,6 +12,9 @@ Project functionalities:
  - accept/decline the offer (only the owner of the NFT can see the offers for the NFT and he can accept or reject them and if he accepts the offer all the other offers are refunded)
  - notifications (a simple system of showing notifications related to the user offers, the user will see if his offer has been accepted or rejected)
 
+The app is hosted on Netlify: https://dynamic-biscotti-aeb33e.netlify.app/
+Requirements: MetaMask extension installed, and use Sepolia test network 
+
 If you want to run the project locally you can clone the project and run these commands:
   - cd nft-for-real-estate
   - npm install

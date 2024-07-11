@@ -3,7 +3,7 @@
 This project is created for the Polkadot Prodigy hackathon
 
 
-The only requirement for this project is secret keys for Filebase. You can obtain them by creating a Filebase account. However, there might be additional setup steps, so I recommend checking the link to the website I posted on my TaiKai project profile.
+The only requirement for this project is secret keys for Filebase. You can obtain them by creating a Filebase account. However, there might be additional setup steps, so I recommend checking the link to the website I posted on my TaiKai project profile (link: https://taikai.network/PolkadotProdigy/hackathons/prodigy/projects/clwctl9vz0c0wyg01wjat92qz/idea).
 
 Project functionalities:
  - buy NFT (user can buy selected NFT)
